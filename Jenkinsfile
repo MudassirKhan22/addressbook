@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     tools {
         
@@ -11,9 +11,6 @@ pipeline {
         string(name:'Env',defaultValue:'Test',description:'Version to deploy')
         booleanParam(name:'exceuteTests',defaultValue:true,description:'decide to run tc')
         choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
-
-
-
     }
 
     stages {
