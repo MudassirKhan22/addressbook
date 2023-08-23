@@ -18,6 +18,7 @@ pipeline {
 
     stages {
         stage('Compile') {
+
             steps {
                 
                 git 'https://github.com/MudassirKhan22/addressbook.git'
@@ -49,17 +50,37 @@ pipeline {
         }
         
          stage('Package') {
-            steps {
-                
-               
 
+            agent {label 'Linux-slave'}
+
+
+            // when{
+            //     expression{
+            //         BRNACH_NAME == 'dev' || BRNACH_NAME == 'develop'
+            //     }
+            // }
+            steps {
                 
                 sh "mvn package"
                 echo "Deploying app version: ${params.APPVERSION}"
 
             }
+        }
 
-           
+        stage('Deploy'){
+            agent {label 'Linux-slave'}
+
+            steps{
+                input{
+                    message: "Please approve to deploy"
+                    ok "yes, to deploy"
+                    parameters{
+                        choice(name:'APPVERSION', choice['1.2','1.3','1.4'])
+                    }
+                }
+
+                echo "Deploying to test"
+            }
         }
     }
 }
