@@ -10,11 +10,6 @@ pipeline {
         BUILD_SERVER_IP='ec2-user@172.31.42.99'
     }
 
-
-    parameters{
-        string(name:'Env',defaultValue:'Test',description:'Version to deploy')
-        booleanParam(name:'exceuteTests',defaultValue:true,description:'decide to run tc')
-        choice(name:'APPVERSION',choices:['1.1','1.2','1.3'])
     }
 
     stages {
@@ -36,11 +31,6 @@ pipeline {
         
          stage('UnitTest') {
 
-            when{
-                expression{
-                    params.exceuteTests==true
-                }
-            }
             steps {
                 
                 sh "mvn test"
