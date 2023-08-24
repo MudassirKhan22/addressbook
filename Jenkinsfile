@@ -6,6 +6,10 @@ pipeline {
         maven "mymaven"
     }
 
+    environment{
+        BUILD_SERVER_IP='ec2-user@172.31.42.99'
+    }
+
 
     parameters{
         string(name:'Env',defaultValue:'Test',description:'Version to deploy')
@@ -48,7 +52,7 @@ pipeline {
         
          stage('Package') {
 
-            agent {label 'Linux-slave'}
+            agent any
 
 
             // when{
@@ -57,9 +61,16 @@ pipeline {
             //     }
             // }
             steps {
+                script{
+                    sshagent(['build-server-key']){
+                        echo "Packaging the code on new slave"
+                        sh "scp -o StrictHostKeyChecking=no server-config.sh ${BUILD_SERVER_IP}:/home/ec2-user"
+                        sh "ssh -o StrictHostKeyChecking=no ${BUILD_SERVER_IP} 'bash ~/server-config.sh'"
+                    }
+
+                }
                 
-                sh "mvn package"
-                echo "Deploying app version: ${params.APPVERSION}"
+                
 
             }
         }
