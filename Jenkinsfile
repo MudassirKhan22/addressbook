@@ -51,11 +51,11 @@ pipeline {
             agent any
 
 
-            // when{
-            //     expression{
-            //         BRNACH_NAME == 'dev' || BRNACH_NAME == 'develop'
-            //     }
-            // }
+            when{
+                expression{
+                    BRANCH_NAME == 'dev' || BRANCH_NAME == 'JenkinsCopy'
+                }
+            }
             steps {
                 script{
                     sshagent(['build-server-key']){
